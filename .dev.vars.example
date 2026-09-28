@@ -1,0 +1,4 @@
+# Copia a .dev.vars para desarrollo local. Nunca pongas esto en wrangler.jsonc.
+ACCESS_BYPASS=1
+# Clave privada VAPID (par de VAPID_PUBLIC_KEY de wrangler.jsonc). Generar con: node scripts/vapid-keys.mjs
+VAPID_PRIVATE_KEY=REEMPLAZAR

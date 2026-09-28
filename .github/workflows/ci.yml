@@ -1,0 +1,67 @@
+name: CI
+
+# Corre en Linux porque en Windows Smart App Control bloquea el binario workerd (vitest y wrangler dev).
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: typecheck + vitest (workerd)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: node scripts/ci-wrangler-config.mjs
+      - run: npm test
+        env:
+          WRANGLER_TEST_CONFIG: ./wrangler.ci.jsonc
+
+  smoke:
+    name: smoke (wrangler dev + Playwright)
+    runs-on: ubuntu-latest
+    needs: test
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Variables locales: sin Access y una clave privada VAPID de relleno (solo se comprueba su presencia; nada se envía).
+      - run: printf 'ACCESS_BYPASS=1\nVAPID_PRIVATE_KEY=ci-dummy-private-key-0123456789abcdef\n' > .dev.vars
+      - run: npm run build
+      - name: wrangler dev
+        env:
+          WRANGLER_LOG: debug
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          node scripts/ci-wrangler-config.mjs
+          npx wrangler dev -c wrangler.ci.jsonc --port 8787 --local-upstream localhost > wrangler.log 2>&1 &
+          for i in $(seq 1 90); do curl -sf http://127.0.0.1:8787/health > /dev/null && break; sleep 1; done
+          curl -sf http://127.0.0.1:8787/health
+      - name: datos de prueba (un mes con filas)
+        run: node scripts/ci-seed.mjs
+      - run: npm run smoke
+      - if: failure()
+        run: tail -n 120 wrangler.log
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wrangler-logs
+          path: |
+            wrangler.log
+            ~/.config/.wrangler/logs/*.log
+          if-no-files-found: ignore

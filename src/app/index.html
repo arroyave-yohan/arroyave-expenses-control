@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#1F2736">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gastos">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="icon" href="/icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<title>Torre de control</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="top" id="header"></header>
+<main class="wrap">
+  <section class="kpis" id="kpis" aria-label="Resumen del mes"></section>
+  <section class="toolbar" id="toolbar"></section>
+  <section class="chips" id="chips" aria-label="Categorías"></section>
+  <div class="gridwrap" id="gridwrap">
+    <table id="grid">
+      <thead id="thead"></thead>
+      <tbody id="tbody"></tbody>
+      <tfoot><tr id="tfootRow"></tr></tfoot>
+    </table>
+    <div class="empty" id="emptyState" hidden></div>
+  </div>
+  <div class="cards" id="cards"></div>
+</main>
+<div id="drawerRoot" hidden></div>
+<div id="modalRoot" hidden></div>
+<div class="toast" id="toast" hidden><span id="toastMsg"></span><button id="toastAct" hidden></button></div>
+<div class="selbar" id="selbar" hidden></div>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

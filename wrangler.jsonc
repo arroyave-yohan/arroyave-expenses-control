@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "expenses-control",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/health", "/compartir"]
+  },
+  "workers_dev": true,
+  "kv_namespaces": [
+    // Crea tu namespace con: npx wrangler kv namespace create GASTOS_KV
+    // y pega aquí el id que imprime el comando.
+    { "binding": "GASTOS_KV", "id": "REEMPLAZA_CON_TU_KV_ID" }
+  ],
+  "ai": { "binding": "AI" },
+  "triggers": { "crons": ["0 * * * *"] },
+  "vars": {
+    // Mientras empiecen con "cambiar", el Worker responde 503 en /api/* (fail-closed).
+    "ACCESS_TEAM": "cambiar-por-tu-team-de-access",
+    "ACCESS_AUD": "cambiar-por-tu-aud-de-access",
+    "VAPID_SUBJECT": "mailto:tu-correo@ejemplo.com",
+    "VAPID_PUBLIC_KEY": "genera-la-tuya-con-npm-run-vapid:keys"
+  },
+  "observability": { "enabled": true }
+}

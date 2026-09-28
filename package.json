@@ -1,0 +1,41 @@
+{
+  "name": "arroyave-expenses-control",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "author": "Yohan Arroyave",
+  "license": "MIT",
+  "repository": "github:arroyave-yohan/arroyave-expenses-control",
+  "scripts": {
+    "dev": "wrangler dev --local-upstream localhost",
+    "dev:api": "wrangler dev --local-upstream localhost",
+    "dev:app": "vite",
+    "build": "vite build",
+    "deploy": "vite build && wrangler deploy",
+    "test": "vite build && vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit && tsc -p src/app/tsconfig.json && tsc -p scripts/tsconfig.json",
+    "typecheck:scripts": "tsc -p scripts/tsconfig.json",
+    "import:csv": "tsx scripts/import-csv.ts",
+    "smoke": "node scripts/smoke.mjs",
+    "vapid:keys": "node scripts/vapid-keys.mjs",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "dependencies": {
+    "@block65/webcrypto-web-push": "^2.0.0",
+    "hono": "^4.13.8",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@cloudflare/workers-types": "^5.20260920.1",
+    "@types/node": "^26.6.2",
+    "playwright": "^1.63.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^4.1.11",
+    "wrangler": "4.124.0"
+  }
+}
